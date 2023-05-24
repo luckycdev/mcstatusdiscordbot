@@ -53,7 +53,7 @@ let datemonth = newdate.getUTCMonth();
 let dateday = newdate.getUTCDate();
 let timestamp = datehours+":"+dateminutes+":"+dateseconds+":"+datemilliseconds+" on "+dateday+"/"+datemonth+"/"+dateyear;
 
-client.user.setActivity(`${data.players.online}`);
+client.user.setActivity(`Watching ${data.players.online} players on ${servipport}`);
 
       const embed = new EmbedBuilder()
         .setTitle('Server Status')
