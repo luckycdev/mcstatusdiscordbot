@@ -11,14 +11,16 @@ const client = new Discord.Client({
   ]
 });
 
-const channelId = 'INSERT DISCORD CHANNEL';
-const server = 'INSERT MINECRAFT SERVER IP';
+const channelId = 'INSERT DISCORD CHANNEL ID';
+const server = 'INSERT MC SERVER IP';
+const imagelink = 'OPTIONAL - INSERT IMAGE LINK'; //do not remove this line, if you do not want an image leave this line how it is
+const bottoken = 'INSERT BOT TOKEN';
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}`);
   sendMessage();
   setInterval(sendMessage, 60000);
-client.user.setStatus('dnd');
+  client.user.setStatus('dnd');
 });
 
 function extractVersionNumbers(versionString) {
@@ -31,8 +33,7 @@ function sendMessage() {
   axios.get('https://api.mcstatus.io/v2/status/java/'+server)
     .then(response => {
       const data = response.data;
-      client.user.setActivity(String(data.players.online)+" Playing "+String(data.host));
-      const playerList = data.players.list.map(player => player.name_raw).join(', ');
+      client.user.setActivity(`${data.players.online} Playing ${data.host}`);
       const version = extractVersionNumbers(data.version.name_raw);
       let servport;
       if(data.port!=25565){
@@ -53,19 +54,20 @@ let datemonth = newdate.getUTCMonth();
 let dateday = newdate.getUTCDate();
 let timestamp = datehours+":"+dateminutes+":"+dateseconds+":"+datemilliseconds+" on "+dateday+"/"+datemonth+"/"+dateyear;
 
-client.user.setActivity(`Watching ${data.players.online} players on ${servipport}`);
-
       const embed = new EmbedBuilder()
-        .setTitle('Server Status')
-        //.setImage('OPTIONAL - INSERT IMAGE LINK')
+        .setTitle(String(servipport)+"'s Server Status")
         .addFields(
           { name: 'Online', value: String(data.online) },
-          { name: 'IP', value: servipport },
-          { name: 'Version', value: version },
+          { name: 'IP', value: String(servipport) },
+          { name: 'Version', value: String(version) },
           { name: 'Players Online', value: String(data.players.online)+"/"+String(data.players.max) },
-          { name: 'Player List', value: playerList },
           { name: 'MOTD', value: String(data.motd.raw) }
         );
+
+            if(imagelink != 'OPTIONAL - INSERT IMAGE LINK')
+            {
+                embed.setImage(imagelink);
+            };
 
 const channel = client.channels.cache.get(channelId);
 channel.messages.fetch({ limit: 1 })
@@ -88,4 +90,4 @@ channel.messages.fetch({ limit: 1 })
     console.log('Error fetching bot message: ', error.message, error);
   });
 })};
-client.login('INSERT BOT TOKEN');
+client.login(bottoken);
