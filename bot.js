@@ -33,7 +33,8 @@ function sendMessage() {
   axios.get('https://api.mcstatus.io/v2/status/java/'+server)
     .then(response => {
       const data = response.data;
-      client.user.setActivity(`${data.players.online} Playing ${data.host}`);
+      if (data.players && typeof data.players.online !== 'undefined') {
+      client.user.setActivity(`${data.players.online} Playing ${data.host}`);}
       const version = extractVersionNumbers(data.version.name_raw);
       let servport;
       if(data.port!=25565){
