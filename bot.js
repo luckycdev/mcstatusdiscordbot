@@ -46,18 +46,21 @@ function sendMessage() {
       const servipport=`${data.host}${servport}`;
 
 const newdate = new Date();
-let datehours = newdate.getUTCHours();
-let dateminutes = newdate.getUTCMinutes();
-let dateseconds = newdate.getUTCSeconds();
-let datemilliseconds = newdate.getUTCMilliseconds();
-let dateyear = newdate.getUTCFullYear();
-let datemonth = newdate.getUTCMonth();
-let dateday = newdate.getUTCDate();
+let datehours = newdate.getHours();
+let dateminutes = newdate.getMinutes();
+let dateseconds = newdate.getSeconds();
+let datemilliseconds = newdate.getMilliseconds();
+let dateyear = newdate.getFullYear();
+let datemonth = newdate.getMonth();
+let dateday = newdate.getDate();
 let timestamp = datehours+":"+dateminutes+":"+dateseconds+":"+datemilliseconds+" on "+dateday+"/"+datemonth+"/"+dateyear;
+
+if (data.version && typeof data.version.name_raw !== 'undefined') {
 
       const embed = new EmbedBuilder()
         .setTitle(String(servipport)+"'s Server Status")
         .addFields(
+          { name: 'Last Edited', value: String(timestamp) },
           { name: 'Online', value: String(data.online) },
           { name: 'IP', value: String(servipport) },
           { name: 'Version', value: String(version) },
@@ -69,7 +72,7 @@ let timestamp = datehours+":"+dateminutes+":"+dateseconds+":"+datemilliseconds+"
             {
                 embed.setImage(imagelink);
             };
-
+          
 const channel = client.channels.cache.get(channelId);
 channel.messages.fetch({ limit: 1 })
   .then(messages => {
@@ -77,18 +80,18 @@ channel.messages.fetch({ limit: 1 })
     if (lastMessage && lastMessage.author.id === client.user.id) {
       lastMessage.edit({ embeds: [embed] })
         .catch(error => {
-          console.log('Error editing server status embed: ', error.message, error);
+          console.log(timestamp, 'Error editing server status embed: ', error.message, error);
         });
         console.log(`Edited at ${timestamp}`);
     } else {
       channel.send({ embeds: [embed] })
         .catch(error => {
-          console.log('Error sending server status embed: ', error.message, error);
+          console.log(timestamp, 'Error sending server status embed: ', error.message, error);
         });
         console.log(`Sent at ${timestamp}`);
       }})
   .catch(error => {
-    console.log('Error fetching bot message: ', error.message, error);
-  });
+    console.log(timestamp, 'Error fetching bot message: ', error.message, error);
+  })};
 })};
 client.login(bottoken);
