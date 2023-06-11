@@ -53,7 +53,7 @@ let datemilliseconds = newdate.getMilliseconds();
 let dateyear = newdate.getFullYear();
 let datemonth = newdate.getMonth();
 let dateday = newdate.getDate();
-let timestamp = datehours+":"+dateminutes+":"+dateseconds+":"+datemilliseconds+" on "+dateday+"/"+datemonth+"/"+dateyear;
+let timestamp = datehours+":"+dateminutes+":"+dateseconds+":"+datemilliseconds+" on "+datemonth+"/"+dateday+"/"+dateyear;
 
 if (data.version && typeof data.version.name_raw !== 'undefined') {
 
@@ -92,6 +92,10 @@ channel.messages.fetch({ limit: 1 })
       }})
   .catch(error => {
     console.log(timestamp, 'Error fetching bot message: ', error.message, error);
-  })};
+  })
+.catch(error=> {
+  console.log('Error retrieving server status:', error.message, error);
+  setTimeout(sendMessage, 5000);
+})}
 })};
 client.login(bottoken);
